@@ -9,6 +9,7 @@ import {
 import { useSmartValue } from "use-smartvalue"
 import { IPlayerState } from "./types"
 import { IVideoPlayerContext, VideoPlayerContext } from "./usePlayer"
+import useHotkeys from "./useHotkeys"
 
 export const VideoPlayerProvider: FC<PropsWithChildren> = ({ children }) => {
   const playerState = useSmartValue<IPlayerState>({
@@ -215,6 +216,8 @@ export const VideoPlayerProvider: FC<PropsWithChildren> = ({ children }) => {
       loadCaptions,
     ]
   )
+
+  useHotkeys(contextValues)
 
   return (
     <VideoPlayerContext.Provider value={contextValues}>
