@@ -3,30 +3,29 @@ import {
   ClosedCaptionOutlined,
   Fullscreen,
   FullscreenExit,
-} from "@mui/icons-material"
-import PauseIcon from "@mui/icons-material/Pause"
-import PlayArrowIcon from "@mui/icons-material/PlayArrow"
-import { IconButton, styled } from "@mui/material"
-import { FC } from "react"
-import { useVidePlayer } from "../../control/usePlayer"
-import Space from "../Space"
-import SpaceBetween from "../SpaceBetween"
-import VolumeSlider from "./VolumeSlider"
-import Duration from "./Duration"
-import Timeline from "./Timeline"
+} from '@mui/icons-material'
+import PauseIcon from '@mui/icons-material/Pause'
+import PlayArrowIcon from '@mui/icons-material/PlayArrow'
+import { IconButton, styled } from '@mui/material'
+import { FC } from 'react'
+import { useVidePlayer } from '../../control/usePlayer'
+import Space from '../shared/Space'
+import SpaceBetween from '../shared/SpaceBetween'
+import VolumeSlider from './VolumeSlider'
+import Duration from './Duration'
+import Timeline from './Timeline'
 
-const Container = styled("div")(({ theme }) => ({
-  position: "absolute",
+const Container = styled('div')(({ theme }) => ({
+  position: 'absolute',
   bottom: 0,
-  height: "7vh",
-  width: "100vw",
-  backgroundColor: "transparent",
+  height: '7vh',
+  width: '100vw',
+  backgroundColor: 'transparent',
   paddingInline: 16,
 }))
 
 const Controls: FC = () => {
-  const { playerState, onPause, onPlay, toggleCaptions, toggleFullscreen } =
-    useVidePlayer()
+  const { playerState, onPause, onPlay, toggleCaptions, toggleFullscreen } = useVidePlayer()
 
   const { play, pause, captionsOn, fullscreen } = playerState.get()
 
