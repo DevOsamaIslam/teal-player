@@ -67,7 +67,22 @@ export const VideoPlayerProvider: FC<PropsWithChildren> = ({ children }) => {
     [volumeState]
   )
 
-  const toggleCaption = useCallback(() => {
+  const seek = useCallback(() => {
+    if (!videoRef.current) return
+
+    videoRef.current.currentTime = Math.min(
+      videoRef.current.currentTime + 5,
+      videoRef.current.duration
+    )
+  }, [videoRef, playerState])
+
+  const rewind = useCallback(() => {
+    if (!videoRef.current) return
+
+    videoRef.current.currentTime = Math.max(videoRef.current.currentTime - 5, 0)
+  }, [videoRef, playerState])
+
+  const toggleCaptions = useCallback(() => {
     if (!player.video) return
     playerState.set((prev) => {
       if (videoRef.current) {
@@ -123,6 +138,7 @@ export const VideoPlayerProvider: FC<PropsWithChildren> = ({ children }) => {
 
       if (captionsRef.current) {
         captionsRef.current.src = URL.createObjectURL(captionFile)
+        if (!player.captionsOn) toggleCaptions()
       }
     },
     [playerState]
@@ -174,8 +190,10 @@ export const VideoPlayerProvider: FC<PropsWithChildren> = ({ children }) => {
       onPause,
       onPlay,
       setVolume,
+      seek,
+      rewind,
       toggleVideo,
-      toggleCaption,
+      toggleCaptions,
       toggleFullscreen,
       loadVideo,
       loadCaptions,
@@ -188,8 +206,10 @@ export const VideoPlayerProvider: FC<PropsWithChildren> = ({ children }) => {
       onPause,
       onPlay,
       setVolume,
+      seek,
+      rewind,
       toggleVideo,
-      toggleCaption,
+      toggleCaptions,
       toggleFullscreen,
       loadVideo,
       loadCaptions,

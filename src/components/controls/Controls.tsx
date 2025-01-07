@@ -25,7 +25,7 @@ const Container = styled("div")(({ theme }) => ({
 }))
 
 const Controls: FC = () => {
-  const { playerState, onPause, onPlay, toggleCaption, toggleFullscreen } =
+  const { playerState, onPause, onPlay, toggleCaptions, toggleFullscreen } =
     useVidePlayer()
 
   const { play, pause, captionsOn, fullscreen } = playerState.get()
@@ -50,7 +50,7 @@ const Controls: FC = () => {
           <Duration />
         </Space>
         <Space>
-          <IconButton color="primary" onClick={toggleCaption}>
+          <IconButton color="primary" onClick={toggleCaptions}>
             {captionsOn && <ClosedCaption />}
             {!captionsOn && <ClosedCaptionOutlined />}
           </IconButton>

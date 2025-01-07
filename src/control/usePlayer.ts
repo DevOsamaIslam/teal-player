@@ -8,8 +8,10 @@ export interface IVideoPlayerContext {
   onPause: () => void
   onPlay: () => void
   setVolume: (volume: number) => void
+  seek: () => void
+  rewind: () => void
   toggleVideo: () => void
-  toggleCaption: () => void
+  toggleCaptions: () => void
   toggleFullscreen: () => void
   loadVideo: (file: FileList | null) => void
   loadCaptions: (file: FileList | null) => void
