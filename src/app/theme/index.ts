@@ -1,23 +1,23 @@
-import { createTheme } from "@mui/material/styles"
-import { teal, grey } from "@mui/material/colors"
+import { createTheme } from '@mui/material/styles'
+import { teal, grey } from '@mui/material/colors'
 
 const theme = createTheme({
   palette: {
     primary: {
-      main: "#068",
-      light: "#0ab",
-      dark: "#056",
-      contrastText: "#fff",
+      main: '#067',
+      light: '#0ab',
+      dark: '#056',
+      contrastText: '#fff',
     },
     secondary: {
       main: grey[500],
       light: grey[300],
       dark: grey[700],
-      contrastText: "#000",
+      contrastText: '#000',
     },
     background: {
       default: grey[100],
-      paper: "#fff",
+      paper: '#fff',
     },
     text: {
       primary: grey[900],
@@ -25,19 +25,19 @@ const theme = createTheme({
     },
   },
   typography: {
-    fontFamily: "Roboto, Arial, sans-serif",
+    fontFamily: 'Roboto, Arial, sans-serif',
     h1: {
       fontWeight: 700,
-      fontSize: "2.5rem",
+      fontSize: '2.5rem',
       color: teal[700],
     },
     h2: {
       fontWeight: 600,
-      fontSize: "2rem",
+      fontSize: '2rem',
       color: teal[600],
     },
     body1: {
-      fontSize: "1rem",
+      fontSize: '1rem',
       color: grey[800],
     },
   },
@@ -45,13 +45,13 @@ const theme = createTheme({
     MuiButton: {
       styleOverrides: {
         root: {
-          textTransform: "none",
-          borderRadius: "8px",
+          textTransform: 'none',
+          borderRadius: '8px',
         },
         containedPrimary: {
           backgroundColor: teal[500],
-          color: "#fff",
-          "&:hover": {
+          color: '#fff',
+          '&:hover': {
             backgroundColor: teal[700],
           },
         },
