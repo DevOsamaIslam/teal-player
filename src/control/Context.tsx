@@ -1,15 +1,9 @@
-import {
-  FC,
-  PropsWithChildren,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-} from "react"
-import { useSmartValue } from "use-smartvalue"
-import { IPlayerState } from "./types"
-import { IVideoPlayerContext, VideoPlayerContext } from "./usePlayer"
-import useHotkeys from "./useHotkeys"
+import { FC, PropsWithChildren, useCallback, useEffect, useMemo, useRef } from 'react'
+import { useSmartValue } from 'use-smartvalue'
+import { IPlayerState } from './types'
+import { IVideoPlayerContext, VideoPlayerContext } from './usePlayer'
+import useHotkeys from './useHotkeys'
+import { snackbar } from '../components/shared/snackbar'
 
 export const VideoPlayerProvider: FC<PropsWithChildren> = ({ children }) => {
   const playerState = useSmartValue<IPlayerState>({
@@ -36,7 +30,7 @@ export const VideoPlayerProvider: FC<PropsWithChildren> = ({ children }) => {
 
   const onPause = useCallback(() => {
     if (!player.video) return
-    playerState.set((prev) => ({
+    playerState.set(prev => ({
       ...prev,
       pause: true,
       play: false,
@@ -46,7 +40,7 @@ export const VideoPlayerProvider: FC<PropsWithChildren> = ({ children }) => {
 
   const onPlay = useCallback(() => {
     if (!player.video) return
-    playerState.set((prev) => ({
+    playerState.set(prev => ({
       ...prev,
       pause: false,
       play: true,
@@ -55,17 +49,18 @@ export const VideoPlayerProvider: FC<PropsWithChildren> = ({ children }) => {
   }, [playerState])
 
   const toggleVideo = useCallback(() => {
-    if (!player.video) return
+    if (!player.video) return snackbar.error({}, { children: 'Video file not found' })
     if (player.play) onPause()
     else onPlay()
   }, [playerState, onPause, onPlay])
 
   const setVolume = useCallback(
     (volume: number) => {
+      if (!player.video) return snackbar.error({}, { children: 'Video file not found' })
       volumeState.set(volume)
       if (videoRef.current) videoRef.current.volume = volume / 100
     },
-    [volumeState]
+    [volumeState],
   )
 
   const seek = useCallback(() => {
@@ -73,7 +68,7 @@ export const VideoPlayerProvider: FC<PropsWithChildren> = ({ children }) => {
 
     videoRef.current.currentTime = Math.min(
       videoRef.current.currentTime + 5,
-      videoRef.current.duration
+      videoRef.current.duration,
     )
   }, [videoRef, playerState])
 
@@ -84,12 +79,12 @@ export const VideoPlayerProvider: FC<PropsWithChildren> = ({ children }) => {
   }, [videoRef, playerState])
 
   const toggleCaptions = useCallback(() => {
-    if (!player.video) return
-    playerState.set((prev) => {
+    if (!player.video || !player.captionsFile)
+      return snackbar.error({}, { children: 'Captions file not found' })
+
+    playerState.set(prev => {
       if (videoRef.current) {
-        videoRef.current.textTracks[0].mode = prev.captionsOn
-          ? "hidden"
-          : "showing"
+        videoRef.current.textTracks[0].mode = prev.captionsOn ? 'hidden' : 'showing'
       }
       return {
         ...prev,
@@ -99,8 +94,8 @@ export const VideoPlayerProvider: FC<PropsWithChildren> = ({ children }) => {
   }, [playerState])
 
   const toggleFullscreen = useCallback(() => {
-    if (!player.video) return
-    playerState.set((prev) => {
+    if (!player.video) return snackbar.error({}, { children: 'Video file not found' })
+    playerState.set(prev => {
       if (prev.fullscreen) {
         document.exitFullscreen()
       } else containerRef.current?.requestFullscreen()
@@ -115,7 +110,7 @@ export const VideoPlayerProvider: FC<PropsWithChildren> = ({ children }) => {
     (file: FileList | null) => {
       if (!file) return
       const videoFile = file[0]
-      playerState.set((prev) => ({
+      playerState.set(prev => ({
         ...prev,
         video: videoFile,
       }))
@@ -124,7 +119,7 @@ export const VideoPlayerProvider: FC<PropsWithChildren> = ({ children }) => {
         videoRef.current.src = URL.createObjectURL(videoFile)
       }
     },
-    [playerState]
+    [playerState],
   )
 
   const loadCaptions = useCallback(
@@ -132,7 +127,7 @@ export const VideoPlayerProvider: FC<PropsWithChildren> = ({ children }) => {
       if (!file?.[0]) return
 
       const captionFile = file[0]
-      playerState.set((prev) => ({
+      playerState.set(prev => ({
         ...prev,
         captionsFile: captionFile,
       }))
@@ -142,7 +137,7 @@ export const VideoPlayerProvider: FC<PropsWithChildren> = ({ children }) => {
         if (!player.captionsOn) toggleCaptions()
       }
     },
-    [playerState]
+    [playerState],
   )
 
   useEffect(() => {
@@ -151,7 +146,7 @@ export const VideoPlayerProvider: FC<PropsWithChildren> = ({ children }) => {
     const showControls = () => {
       // Show controls if they are not already visible
       if (!player.controlsVisible) {
-        playerState.set((prev) => ({
+        playerState.set(prev => ({
           ...prev,
           controlsVisible: true,
         }))
@@ -163,7 +158,7 @@ export const VideoPlayerProvider: FC<PropsWithChildren> = ({ children }) => {
       // Set a new timeout to hide the controls after 2 seconds of no activity
       timeoutId = setTimeout(() => {
         if (player.controlsVisible) {
-          playerState.set((prev) => ({
+          playerState.set(prev => ({
             ...prev,
             controlsVisible: false,
           }))
@@ -173,11 +168,11 @@ export const VideoPlayerProvider: FC<PropsWithChildren> = ({ children }) => {
 
     // Attach the mousemove event listener only when the video is playing
     if (player.video && player.play)
-      containerRef.current?.addEventListener("mousemove", showControls)
+      containerRef.current?.addEventListener('mousemove', showControls)
 
     return () => {
       // Cleanup event listener and timeout
-      containerRef.current?.removeEventListener("mousemove", showControls)
+      containerRef.current?.removeEventListener('mousemove', showControls)
       clearTimeout(timeoutId)
     }
   }, [containerRef, playerState])
@@ -214,7 +209,7 @@ export const VideoPlayerProvider: FC<PropsWithChildren> = ({ children }) => {
       toggleFullscreen,
       loadVideo,
       loadCaptions,
-    ]
+    ],
   )
 
   useHotkeys(contextValues)
