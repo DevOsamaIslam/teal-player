@@ -1,12 +1,18 @@
 import { createTheme } from '@mui/material/styles'
-import { teal, grey } from '@mui/material/colors'
+import { grey } from '@mui/material/colors'
+
+const teal = {
+  light: '#0aa',
+  main: '#067',
+  dark: '#033',
+}
 
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#067',
-      light: '#0ab',
-      dark: '#056',
+      main: teal.main,
+      light: teal.light,
+      dark: teal.dark,
       contrastText: '#fff',
     },
     secondary: {
@@ -29,12 +35,12 @@ const theme = createTheme({
     h1: {
       fontWeight: 700,
       fontSize: '2.5rem',
-      color: teal[700],
+      color: teal.dark,
     },
     h2: {
       fontWeight: 600,
       fontSize: '2rem',
-      color: teal[600],
+      color: teal.dark,
     },
     body1: {
       fontSize: '1rem',
@@ -49,10 +55,10 @@ const theme = createTheme({
           borderRadius: '8px',
         },
         containedPrimary: {
-          backgroundColor: teal[500],
+          backgroundColor: teal.main,
           color: '#fff',
           '&:hover': {
-            backgroundColor: teal[700],
+            backgroundColor: teal.dark,
           },
         },
       },
@@ -60,7 +66,7 @@ const theme = createTheme({
     MuiAppBar: {
       styleOverrides: {
         root: {
-          backgroundColor: teal[500],
+          backgroundColor: teal.main,
         },
       },
     },
