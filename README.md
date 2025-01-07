@@ -1,50 +1,29 @@
-# React + TypeScript + Vite
+# Teal Player
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Teal Player is a lightweight, React-based video player that operates entirely in the user's browser. It allows users to upload and watch local video files with a range of customizable playback controls.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Upload Video File:** Users can upload a video file directly from their local system.
+- **Upload Captions:** Supports uploading VTT (Web Video Text Tracks) files for captions.
+- **Toggle Captions:** Users can enable or disable captions during playback.
+- **Play/Pause:** Simple controls to play and pause the video.
+- **Volume Control:** Adjust the playback volume using an intuitive slider.
+- **Duration and Elapsed Time:** Displays the total duration of the video and the current elapsed time.
+- **Seek:** Seek to a specific part of the video by dragging a progress bar.
+- **Rewind:** Quickly rewind a few seconds for instant replays.
+- **Fullscreen Toggle:** Switch between fullscreen and regular view modes.
 
-## Expanding the ESLint configuration
+## Supported Shortcuts
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+| Shortcut             | Action                          |
+|----------------------|---------------------------------|
+| `Space`              | Play/Pause the video           |
+| `Arrow Up`           | Increase volume                |
+| `Arrow Down`         | Decrease volume                |
+| `Arrow Right`        | Seek forward                   |
+| `Arrow Left`         | Seek backward                  |
+| `F`                  | Toggle fullscreen mode         |
+| `C`                  | Toggle captions                |
+| `M`                  | Mute/Unmute the video          |
 
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
-
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
-
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
-
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
