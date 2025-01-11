@@ -35,7 +35,11 @@ const Toolbar: FC = () => {
           startIcon={<UploadFile />}
         >
           Upload video
-          <HiddenInput type="file" onChange={event => loadVideo(event.target.files)} accept="" />
+          <HiddenInput
+            type="file"
+            onChange={event => loadVideo(event.target.files)}
+            accept="video/*"
+          />
         </Button>
 
         <Button
@@ -52,7 +56,7 @@ const Toolbar: FC = () => {
               loadCaptions(event.target.files)
             }}
             name="caption"
-            accept=".srt, .vtt, .ass, .ssa, .sbv"
+            accept=".vtt"
           />
         </Button>
       </Space>

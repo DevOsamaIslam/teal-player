@@ -1,6 +1,6 @@
-import { SmartValue } from "use-smartvalue"
-import { IPlayerState } from "./types"
-import { createContext, RefObject, useContext } from "react"
+import { SmartValue } from 'use-smartvalue'
+import { IPlayerState } from './types'
+import { createContext, RefObject, useContext } from 'react'
 
 export interface IVideoPlayerContext {
   playerState: SmartValue<IPlayerState>
@@ -11,7 +11,7 @@ export interface IVideoPlayerContext {
   seek: () => void
   rewind: () => void
   toggleVideo: () => void
-  toggleCaptions: () => void
+  toggleCaptions: (captionFile?: File) => void
   toggleFullscreen: () => void
   loadVideo: (file: FileList | null) => void
   loadCaptions: (file: FileList | null) => void

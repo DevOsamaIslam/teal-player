@@ -1,9 +1,9 @@
 import { FC, PropsWithChildren, useCallback, useEffect, useMemo, useRef } from 'react'
 import { useSmartValue } from 'use-smartvalue'
-import { IPlayerState } from './types'
-import { IVideoPlayerContext, VideoPlayerContext } from './usePlayer'
-import useHotkeys from './useHotkeys'
 import { snackbar } from '../components/shared/snackbar'
+import { IPlayerState } from './types'
+import useHotkeys from './useHotkeys'
+import { IVideoPlayerContext, VideoPlayerContext } from './usePlayer'
 
 export const VideoPlayerProvider: FC<PropsWithChildren> = ({ children }) => {
   const playerState = useSmartValue<IPlayerState>({
@@ -52,7 +52,7 @@ export const VideoPlayerProvider: FC<PropsWithChildren> = ({ children }) => {
     if (!player.video) return snackbar.error({}, { children: 'Video file not found' })
     if (player.play) onPause()
     else onPlay()
-  }, [playerState, onPause, onPlay])
+  }, [player.video, onPause, onPlay])
 
   const setVolume = useCallback(
     (volume: number) => {
@@ -60,7 +60,7 @@ export const VideoPlayerProvider: FC<PropsWithChildren> = ({ children }) => {
       volumeState.set(volume)
       if (videoRef.current) videoRef.current.volume = volume / 100
     },
-    [volumeState],
+    [volumeState, player.video],
   )
 
   const seek = useCallback(() => {
@@ -78,20 +78,23 @@ export const VideoPlayerProvider: FC<PropsWithChildren> = ({ children }) => {
     videoRef.current.currentTime = Math.max(videoRef.current.currentTime - 5, 0)
   }, [videoRef, playerState])
 
-  const toggleCaptions = useCallback(() => {
-    if (!player.video || !player.captionsFile)
-      return snackbar.error({}, { children: 'Captions file not found' })
+  const toggleCaptions = useCallback(
+    (captionFile?: File) => {
+      if (!player.video || (!player.captionsFile && !captionFile))
+        return snackbar.error({}, { children: 'Captions file not found' })
 
-    playerState.set(prev => {
-      if (videoRef.current) {
-        videoRef.current.textTracks[0].mode = prev.captionsOn ? 'hidden' : 'showing'
-      }
-      return {
-        ...prev,
-        captionsOn: !prev.captionsOn,
-      }
-    })
-  }, [playerState])
+      playerState.set(prev => {
+        if (videoRef.current) {
+          videoRef.current.textTracks[0].mode = prev.captionsOn ? 'hidden' : 'showing'
+        }
+        return {
+          ...prev,
+          captionsOn: !prev.captionsOn,
+        }
+      })
+    },
+    [player],
+  )
 
   const toggleFullscreen = useCallback(() => {
     if (!player.video) return snackbar.error({}, { children: 'Video file not found' })
@@ -127,6 +130,10 @@ export const VideoPlayerProvider: FC<PropsWithChildren> = ({ children }) => {
       if (!file?.[0]) return
 
       const captionFile = file[0]
+      const extension = captionFile.name.split('.').pop()
+      if (extension !== 'vtt')
+        return snackbar.error({}, { children: 'Only VTT files are supported' })
+
       playerState.set(prev => ({
         ...prev,
         captionsFile: captionFile,
@@ -134,7 +141,7 @@ export const VideoPlayerProvider: FC<PropsWithChildren> = ({ children }) => {
 
       if (captionsRef.current) {
         captionsRef.current.src = URL.createObjectURL(captionFile)
-        if (!player.captionsOn) toggleCaptions()
+        if (!player.captionsOn) toggleCaptions(captionFile)
       }
     },
     [playerState],
@@ -146,6 +153,7 @@ export const VideoPlayerProvider: FC<PropsWithChildren> = ({ children }) => {
     const showControls = () => {
       // Show controls if they are not already visible
       if (!player.controlsVisible) {
+        if (videoRef.current) videoRef.current.style.cursor = 'initial'
         playerState.set(prev => ({
           ...prev,
           controlsVisible: true,
@@ -158,6 +166,7 @@ export const VideoPlayerProvider: FC<PropsWithChildren> = ({ children }) => {
       // Set a new timeout to hide the controls after 2 seconds of no activity
       timeoutId = setTimeout(() => {
         if (player.controlsVisible) {
+          if (videoRef.current) videoRef.current.style.cursor = 'none'
           playerState.set(prev => ({
             ...prev,
             controlsVisible: false,
